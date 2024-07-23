@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lyrics Display</title>
+</head>
+<body>
+  <h1>Song Lyrics</h1>
+  <div id="lyrics">Loading...</div>
+
+  <script>
+    async function fetchLyrics() {
+      try {
+        const response = await fetch('/api/lyrics');
+        const data = await response.json();
+        document.getElementById('lyrics').innerText = data.lyrics;
+      } catch (error) {
+        document.getElementById('lyrics').innerText = 'Error fetching lyrics';
+      }
+    }
+
+    fetchLyrics();
+  </script>
+</body>
+</html>
