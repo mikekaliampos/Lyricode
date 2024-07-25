@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const getLyrics = require('./getLyrics');
+const getAlbumArt = require('./getAlbumArt'); // Import the getAlbumArt function
 
 const app = express();
 const port = 8080;
@@ -8,7 +9,7 @@ const port = 8080;
 // Serve static files from the "public" directory
 app.use(express.static('public'));
 
-// API endpoint to get lyrics
+// API endpoint to get lyrics and album art
 app.get('/api/lyrics', async (req, res) => {
   const { artist, title } = req.query;
 
@@ -20,14 +21,16 @@ app.get('/api/lyrics', async (req, res) => {
     apiKey: "10k-h_7H_x7F8xXbWj8Fdw5acduy6_75rEN_LPA0nkBHtLPDzSapsIa2X5rVdajm",
     title,
     artist,
-    optimizeQuery: true
+    optimizeQuery: true,
+    authHeader: true // Make sure to pass the authHeader option if required by the API
   };
 
   try {
     const lyrics = await getLyrics(options);
-    res.json({ lyrics });
+    const albumArt = await getAlbumArt(options); // Fetch the album art
+    res.json({ lyrics, albumArt });
   } catch (error) {
-    res.status(500).send('Error fetching lyrics');
+    res.status(500).send('Error fetching lyrics or album art');
   }
 });
 

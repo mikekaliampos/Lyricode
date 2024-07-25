@@ -12,7 +12,9 @@
     <input type="text" id="title" placeholder="Title">
     <button onclick="fetchLyrics()">Get Lyrics</button>
   </div>
+  <img id="albumArt" style="max-width: 300px; display: none;">
   <div id="lyrics"></div>
+  
 
   <script>
     async function fetchLyrics() {
@@ -28,8 +30,17 @@
         const response = await fetch(`/api/lyrics?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`);
         const data = await response.json();
         document.getElementById('lyrics').innerText = data.lyrics;
+        
+        if (data.albumArt) {
+          const albumArt = document.getElementById('albumArt');
+          albumArt.src = data.albumArt;
+          albumArt.style.display = 'block';
+        } else {
+          document.getElementById('albumArt').style.display = 'none';
+        }
       } catch (error) {
         document.getElementById('lyrics').innerText = 'Error fetching lyrics';
+        document.getElementById('albumArt').style.display = 'none';
       }
     }
   </script>
